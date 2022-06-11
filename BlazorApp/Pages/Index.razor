@@ -1,0 +1,43 @@
+﻿@page "/"
+@using BlazorApp.Data
+
+<TasksContainer Tasks="Tasks" OnSatatusUpdated="HandleStatusUpdated">
+	<TasksList 
+		ListStatus="TaskStatuses.ToDo"
+		AllowedStatuses="@(new TaskStatuses[] {TaskStatuses.Started})"
+	/>	
+	
+	<TasksList 
+		ListStatus="TaskStatuses.Started"
+		AllowedStatuses="@(new TaskStatuses[] {TaskStatuses.ToDo})"
+	/>
+
+	<TasksList
+		ListStatus="TaskStatuses.Done"
+		AllowedStatuses="@(new TaskStatuses[] {TaskStatuses.Started})"
+	/>	
+</TasksContainer>
+
+@code{
+	List<TaskModel> Tasks = new();
+	string lastUpdatedTask = "";
+
+	protected override void OnInitialized()
+	{
+		for(int i = 0; i < 5; i++)
+		{
+			Tasks.Add(new TaskModel
+			{
+				Id = i,
+				Detail = "Task " + i,
+				Status = TaskStatuses.ToDo,
+				DateTime = DateTime.Now
+			});
+		}
+	}
+
+	void HandleStatusUpdated(TaskModel task)
+	{
+		lastUpdatedTask = task.Detail;
+	}
+}

@@ -1,0 +1,25 @@
+﻿@using BlazorApp.Data
+
+<li 
+	class="draggable"
+	draggable="true" 
+	title="@TaskModel.Detail" 
+	@ondragstart="@(()=> HandleDragStart(TaskModel))"
+>
+	<p class="description">@TaskModel.Detail</p>
+	<p class="last-updated"><small>@TaskModel.DateTime.ToString("HH:mm tt")</small></p>
+</li>
+
+@code {
+	[CascadingParameter]
+	TasksContainer Container { get; set; }
+
+	[Parameter]
+	public TaskModel TaskModel { get; set; }
+
+
+	private void HandleDragStart(TaskModel selectedTask)
+	{
+		Container.Payload = selectedTask;
+	}
+}

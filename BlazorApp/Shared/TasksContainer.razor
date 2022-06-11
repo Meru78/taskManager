@@ -1,0 +1,42 @@
+﻿@using BlazorApp.Data
+
+<div class="tasks-container">
+	<CascadingValue Value="this">
+		@ChildContent
+	</CascadingValue>
+</div>
+
+@code {
+	[Parameter]
+	public List<TaskModel> Tasks { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+	[Parameter]
+	public EventCallback<TaskModel> OnSatatusUpdated { get; set; }
+
+
+	public TaskModel Payload { get; set; }
+
+	public async Task UpdateTaskAsync(TaskStatuses taskStatus)
+	{
+		var task = Tasks.FirstOrDefault(row => row.Id == Payload.Id);
+
+		if(task != null)
+		{
+			task.Status = taskStatus;
+			task.DateTime = DateTime.Now;
+
+			await OnSatatusUpdated.InvokeAsync(Payload);
+		}
+	}
+
+	public async Task StartDraging()
+	{
+		var task = Tasks.FirstOrDefault(row => row.Id == Payload.Id);
+
+		if(task != null)
+		{
+			await OnSatatusUpdated.InvokeAsync(Payload);
+		}
+	}
+}
